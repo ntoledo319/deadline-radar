@@ -1,0 +1,4 @@
+# Deadline Radar watch list — real pages monitored for the demo.
+https://learn-ai-basics.devpost.com/
+https://opencv26.devpost.com/
+https://code-the-future-hackathon.devpost.com/
