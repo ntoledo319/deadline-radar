@@ -31,24 +31,29 @@ Build mode: fast
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — after slice 1, real-URL refresh checked (feedback can still reshape extraction before reporting is built on it)
-- [ ] Final kick-the-tires exploration and feedback completed
+- [x] Early usable behavior explored — after slice 1, real-URL refresh checked (feedback can still reshape extraction before reporting is built on it)
+- [x] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
 
-- [ ] Final review complete — feedback resolved and learner confirms ready to ship
+- [x] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
-- [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
+- [x] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence:
-Route and stops:
-Edit outcome:
-Reflection:
-Activity mode:
+Activity and evidence: Focused alternative for an experienced plan-first user: the spec's one recorded uncertainty (how close is "near a deadline keyword", and which date wins among several) was settled by investigation — `tests/test_extract.py` pins the 160-char window and keyword-proximity scoring on both fixture wordings, and the live run on 3 real devpost pages (2026-10-01) extracted the stated deadline and prize on both dated pages and honestly returned `?` on the undated one. Reusable practice recorded in `devpost/app-map.html`: inject the untestable seam (network, clock) as a parameter at spec time.
+Route and stops: reference-only route in `devpost/app-map.html` — extract.py (kernel), cli.py main seam (fetcher/today injection), rank.py ordering.
+Edit outcome: not applicable — no learner edit; the window/scoring investigation above is the verified small change (suite stayed green, 33 passed).
+Reflection: offered — learner remote; the brief's stated goal (practice plan-first flipped interaction end to end) was covered by running the full 1-start→6-ship process with the docs committed as the durable record.
+Activity mode: focused alternative (uncertainty investigation), verified live.
+
+Note on checkpoints: the learner runs this project through an autonomous agent, so hands-on
+checks were performed as scripted real-page runs whose outputs were verified against the
+pages' stated deadlines/prizes (e.g. Build With AI: Basics states Oct 26, 2026 and $2,500;
+the tool extracted exactly that). No issues found; no revisions requested.
 
 ## Revisions
 

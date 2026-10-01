@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadline Radar — App Map</title>
+<style>
+body { background: #0d1117; color: #c9d1d9; font-family: ui-monospace, Menlo, Consolas, monospace; margin: 0; padding: 2rem; max-width: 60rem; }
+h1 { color: #3fb950; font-size: 1.3rem; }
+h2 { color: #58a6ff; font-size: 1rem; margin-top: 2rem; }
+code { color: #d29922; }
+table { border-collapse: collapse; }
+td { border: 1px solid #30363d; padding: 0.4rem 0.8rem; vertical-align: top; }
+td:first-child { color: #3fb950; white-space: nowrap; }
+.flow { background: #161b22; border: 1px solid #30363d; padding: 1rem; white-space: pre; overflow-x: auto; }
+</style>
+</head>
+<body>
+<h1>◉ Deadline Radar — App Map</h1>
+<p>What each file does and how a request flows through the app. Stdlib-only Python; the only networked step is <code>refresh</code>.</p>
+
+<h2>The two commands, end to end</h2>
+<div class="flow">refresh:  urls.txt → cli.read_urls → fetch.fetch (network) → extract.extract (kernel) → store.save → data/watchlist.json
+report:   data/watchlist.json → store.load → rank.rank(today) → render.render_table (stdout)
+                                                            → render.render_html → docs/index.html</div>
+
+<h2>Files</h2>
+<table>
+<tr><td><code>deadline_radar/extract.py</code></td><td>The kernel. HTML→text via html.parser (script/style stripped), then proximity heuristics: dates near deadline keywords → deadline; largest currency amount near prize keywords → prize. Site-agnostic by design.</td></tr>
+<tr><td><code>deadline_radar/fetch.py</code></td><td>urllib fetch with User-Agent + 10s timeout. The only network code.</td></tr>
+<tr><td><code>deadline_radar/store.py</code></td><td>JSON load/save. Atomic writes; corrupt files renamed aside, never discarded.</td></tr>
+<tr><td><code>deadline_radar/rank.py</code></td><td>days_remaining against an injectable <code>today</code>; ordering: overdue first, soonest next, unknown last.</td></tr>
+<tr><td><code>deadline_radar/render.py</code></td><td>Fixed-width CLI table; self-contained dark HTML page (no JS, no external resources).</td></tr>
+<tr><td><code>deadline_radar/cli.py</code></td><td>argparse + orchestration. Per-URL failure tolerance: failed fetch keeps prior data, flags the row <code>!</code>.</td></tr>
+<tr><td><code>tests/fixtures/</code></td><td>Offline HTML pages (devpost-like, grant-like, no-deadline, malformed). Tests never fetch.</td></tr>
+</table>
+
+<h2>A practice worth reusing</h2>
+<p><strong>Inject the seam you can't test.</strong> <code>cli.main(argv, fetcher=..., today=...)</code> takes the network and the clock as parameters, so the whole pipeline — including the CLI itself — runs offline in tests with a fake fetcher and a fixed date. The production default (<code>fetch_mod.fetch</code>, <code>date.today()</code>) is one line at the seam. Next time a plan names an untestable boundary (network, clock, randomness), put the parameter there at spec time, not after the first painful test.</p>
+
+<h2>Verified</h2>
+<p><code>python3 -m pytest</code> → 33 passed (offline). Live run: 3 real devpost pages refreshed and ranked; extraction confirmed against the pages' stated deadlines and prizes.</p>
+</body>
+</html>
