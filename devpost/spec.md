@@ -71,7 +71,7 @@ User-Agent and a 10-second timeout. The only component that touches the network.
 PRD ref: `prd.md > Extracting deadline and prize`, `prd.md > States and Boundaries` (fetch failure).
 
 ### Extractor
-`extract(html, today) -> {title, deadline, prize}`. Strips tags and script/style blocks
+`extract(html) -> {title, deadline, prize}`. Strips tags and script/style blocks
 via `html.parser`, collapses whitespace, then:
 - finds all date candidates in several formats; scores each by distance to the nearest deadline keyword within a character window; returns the best-scoring future-or-past date as ISO `YYYY-MM-DD`;
 - finds all `$`/`£`/`€` amounts near prize keywords; returns the largest amount as a normalized string (e.g. `$2,500`) — largest wins because headline pages list the pool and then smaller tier amounts;
