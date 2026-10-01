@@ -1,0 +1,15 @@
+# Personal learning context (kept out of commits by default)
+/devpost/learner-profile.md
+
+# Local credentials (secret-free .env.example is allowed)
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Runtime data (watchlist state; re-created by `refresh`)
+/data/*.json
