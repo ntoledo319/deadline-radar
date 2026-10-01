@@ -8,7 +8,7 @@ Skill Pack. The planning documents the process produced are in
 [`devpost/`](devpost/): [scope](devpost/scope.md) · [prd](devpost/prd.md) ·
 [spec](devpost/spec.md) · [build checklist](devpost/checklist.md).
 
-**Demo video:** (link added at ship time)
+**Demo video:** https://youtu.be/Sx2gVP23gK4 (1 min, unlisted)
 
 ## How it works
 
