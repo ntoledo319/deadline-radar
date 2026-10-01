@@ -1,4 +1,5 @@
 import json
+from datetime import date
 
 from deadline_radar import store
 from deadline_radar.cli import main
@@ -87,3 +88,44 @@ def test_refresh_page_with_no_deadline_stores_nulls(tmp_path, load_fixture, make
     assert entry["status"] == "ok"
     assert entry["deadline"] is None
     assert entry["prize"] is None
+
+
+def test_report_empty_store(tmp_path, capsys):
+    store_path = tmp_path / "watchlist.json"
+    rc = main(["--store", str(store_path), "--html", str(tmp_path / "index.html"), "report"])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "empty" in out
+
+
+def test_refresh_then_report_end_to_end(tmp_path, load_fixture, make_fetcher, capsys):
+    urls_file = tmp_path / "urls.txt"
+    store_path = tmp_path / "watchlist.json"
+    html_path = tmp_path / "docs" / "index.html"
+    _write_urls(urls_file, [
+        "https://hackathon.example",
+        "https://grant.example",
+        "https://about.example",
+        "https://flaky.example",
+    ])
+    fetcher = make_fetcher({
+        "https://hackathon.example": load_fixture("devpost_like.html"),   # 2026-10-26
+        "https://grant.example": load_fixture("grant_like.html"),         # 2026-11-15
+        "https://about.example": load_fixture("no_deadline.html"),        # no deadline
+        "https://flaky.example": OSError("boom"),
+    })
+    common = ["--urls", str(urls_file), "--store", str(store_path), "--html", str(html_path)]
+
+    assert main(common + ["refresh"], fetcher=fetcher) == 0
+    assert main(common + ["report"], today=date(2026, 10, 1)) == 0
+
+    out = capsys.readouterr().out
+    # Ranked order in the CLI table: hackathon (25d), grant (45d), then unknowns.
+    assert out.index("https://hackathon.example") < out.index("https://grant.example")
+    assert out.index("https://grant.example") < out.index("https://about.example")
+    assert "Wrote" in out
+
+    html = html_path.read_text()
+    for url in ("hackathon", "grant", "about", "flaky"):
+        assert f"https://{url}.example" in html
+    assert html.index("hackathon.example") < html.index("grant.example")

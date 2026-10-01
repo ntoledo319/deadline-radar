@@ -19,7 +19,7 @@ Build mode: fast
   Learner check: Run `python3 -m deadline_radar refresh` against one real URL and say whether the extracted deadline and prize match what the page says.
   Commit: `Add refresh pipeline: fetch, heuristic extraction, JSON store`
 
-- [ ] **2. `report` ranks the watch list as a CLI table and static HTML page**
+- [x] **2. `report` ranks the watch list as a CLI table and static HTML page**
   Becomes usable: `python -m deadline_radar report` prints a ranked countdown table (past first, unknown last, days remaining) and writes `docs/index.html` with the same rows, dark radar styling, and a timestamp.
   Why now: This is the payoff screen — the ranked countdown is what the user actually comes back for, and it closes the core loop (refresh → report).
   PRD ref: `prd.md > Ranking and reporting`, `prd.md > Screens and Layout`, `prd.md > Look and Feel`

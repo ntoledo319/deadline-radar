@@ -3,11 +3,13 @@ from __future__ import annotations
 
 import argparse
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 from . import extract as extract_mod
 from . import fetch as fetch_mod
+from . import rank as rank_mod
+from . import render as render_mod
 from . import store as store_mod
 
 
@@ -73,6 +75,22 @@ def cmd_refresh(args, fetcher=None) -> int:
     return 0
 
 
+def cmd_report(args, today=None) -> int:
+    today = today or date.today()
+    entries = store_mod.load(args.store)
+    if not entries:
+        print(f"Watch list is empty ({args.store}).")
+        print(f"Add URLs to {args.urls}, then run `refresh` first.")
+        return 0
+    rows = rank_mod.rank(entries, today)
+    print(render_mod.render_table(rows))
+    html_path = Path(args.html)
+    html_path.parent.mkdir(parents=True, exist_ok=True)
+    html_path.write_text(render_mod.render_html(rows, _utc_now()), encoding="utf-8")
+    print(f"\nWrote {html_path} ({len(rows)} entries)")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="deadline_radar",
@@ -87,10 +105,12 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv=None, fetcher=None) -> int:
+def main(argv=None, fetcher=None, today=None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "refresh":
         return cmd_refresh(args, fetcher=fetcher)
+    if args.command == "report":
+        return cmd_report(args, today=today)
     raise SystemExit(f"unknown command: {args.command}")
 
 

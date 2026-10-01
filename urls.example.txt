@@ -1,0 +1,4 @@
+# Deadline Radar watch list — one URL per line, # comments ignored.
+# Replace these with contests and grants you are actually watching.
+https://devpost.com/hackathons
+https://www.grants.gov/
