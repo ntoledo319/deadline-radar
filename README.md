@@ -10,6 +10,8 @@ Skill Pack. The planning documents the process produced are in
 
 **Demo video:** https://youtu.be/Sx2gVP23gK4 (1 min, unlisted)
 
+**Live demo:** https://ntoledo319.github.io/deadline-radar/
+
 ## How it works
 
 `refresh` fetches every URL in your watch list, extracts the deadline (a date near
