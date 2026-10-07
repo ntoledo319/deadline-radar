@@ -1,4 +1,7 @@
-# Deadline Radar watch list — real pages monitored for the demo.
+# Deadline Radar watch list — live Toledo Technologies entries + candidates (2026-10-07)
 https://learn-ai-basics.devpost.com/
 https://opencv26.devpost.com/
-https://code-the-future-hackathon.devpost.com/
+https://amazonappdev2026.devpost.com/
+https://paypalaihackathon.devpost.com/
+https://www.drivendata.org/competitions/306/competition-doe-gems/
+https://gitlab-transcend.devpost.com/
