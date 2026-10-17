@@ -21,7 +21,7 @@ Source: `scope.md > The Unique Kernel`, `scope.md > Who It's For`.
 Two surfaces, same content:
 
 - **CLI table** — fixed-width columns: `DAYS`, `DEADLINE`, `PRIZE`, `TITLE`, `URL`. Rows sorted by deadline ascending; entries with no extractable deadline sort last with `DAYS = ?`. Past deadlines show a negative day count and sort first — they are the loudest signal ("you missed this").
-- **Static HTML page** (`docs/index.html`) — the same ranked table plus a generated-at timestamp, styled dark/monospace, sorted identically. No JavaScript required to read it; fully self-contained so it works from `file://`.
+- **Static HTML page** (`docs/index.html`) — the same ranked table plus a generated-at timestamp, styled dark/monospace, sorted identically. No JavaScript required to read it (a small inline script, if enabled, only recomputes days-left from each row's ISO deadline so the page does not go stale); fully self-contained so it works from `file://`.
 
 ## Look and Feel
 

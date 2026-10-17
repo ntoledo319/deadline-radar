@@ -41,7 +41,13 @@ def test_html_contains_every_entry_and_is_self_contained():
     assert "3 watched" in html
     assert "<style>" in html
     assert "http" not in html.split("</style>")[0]  # no external resources in <style>
-    assert "<script" not in html
+    assert "src=" not in html  # the only script is inline
+
+
+def test_html_carries_iso_deadline_for_live_countdown():
+    html = render_html(ROWS, "2026-10-01T12:00:00Z")
+    assert 'data-deadline="2026-10-26"' in html
+    assert html.count('data-deadline="') == 2  # unknown-deadline row has none
 
 
 def test_html_row_classes_reflect_urgency():

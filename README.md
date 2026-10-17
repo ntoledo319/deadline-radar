@@ -10,7 +10,14 @@ Skill Pack. The planning documents the process produced are in
 
 **Demo video:** https://youtu.be/Sx2gVP23gK4 (1 min, unlisted)
 
-**Live demo:** https://ntoledo319.github.io/deadline-radar/
+**Live demo:** https://ntoledo319.github.io/deadline-radar/ (days left recalculate from your clock when you open it)
+
+**Try it in 10 seconds** (no install, no network; the repo ships a sample watch list):
+
+```bash
+git clone https://github.com/ntoledo319/deadline-radar && cd deadline-radar
+python3 -m deadline_radar report   # prints the ranked table, writes docs/index.html
+```
 
 ## How it works
 
@@ -46,3 +53,10 @@ python3 -m pytest
   keyword is reported as `?` rather than guessed.
 - JavaScript-rendered pages only yield their static shell (stdlib-only constraint).
 - A failed fetch keeps the last known data and flags the row with `!`.
+
+## AI assistance
+
+Built with AI coding agents under human direction, using the Devpost Learn Skill
+Pack's planning workflow. The agents wrote the code, tests and docs; the post-build
+polish (live countdown, mobile layout, README) was done with Claude Code. Commits
+carry `Co-Authored-By` lines where an AI contributed.

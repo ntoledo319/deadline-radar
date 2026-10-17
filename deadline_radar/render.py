@@ -62,6 +62,35 @@ tr.past td.days { color: #f85149; }
 tr.failed td.title { color: #f85149; }
 td.url a { color: #58a6ff; text-decoration: none; }
 td.url a:hover { text-decoration: underline; }
+a:focus-visible { outline: 2px solid #58a6ff; outline-offset: 2px; }
+.intro { max-width: 60rem; line-height: 1.5; }
+.legend { color: #8b949e; font-size: 0.8rem; margin-top: 1rem; }
+.wrap { overflow-x: auto; }
+td.url { word-break: break-all; }
+@media (max-width: 640px) {
+  body { padding: 1rem; }
+  th, td { padding: 0.4rem 0.4rem; }
+  td.url { display: none; }
+  th:last-child { display: none; }
+}
+"""
+
+_SCRIPT = """
+(function () {
+  // Progressive enhancement: recompute days-left from each row's ISO deadline
+  // so this page never goes stale between `report` runs. Without JS, the
+  // days generated at report time are shown.
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  document.querySelectorAll("tr[data-deadline]").forEach(function (tr) {
+    var p = tr.dataset.deadline.split("-");
+    var d = new Date(+p[0], +p[1] - 1, +p[2]);
+    var days = Math.round((d - today) / 86400000);
+    tr.querySelector("td.days").textContent = String(days);
+    tr.className = tr.className.replace(/\\b(past|soon|future)\\b/, days < 0 ? "past" : days < 7 ? "soon" : "future");
+  });
+  var note = document.getElementById("live-note");
+  if (note) note.textContent = "Days left are recalculated from your clock when you open this page.";
+})();
 """
 
 
@@ -83,8 +112,9 @@ def render_html(rows: list[dict], generated_at: str) -> str:
         classes = [_row_class(row)]
         if row.get("status") == "failed":
             classes.append("failed")
+        data = f' data-deadline="{escape(row["deadline"], quote=True)}"' if row.get("deadline") else ""
         body_rows.append(
-            f'    <tr class="{" ".join(classes)}">'
+            f'    <tr class="{" ".join(classes)}"{data}>'
             f'<td class="days">{escape(_display_days(row))}</td>'
             f'<td>{escape(row.get("deadline") or "—")}</td>'
             f'<td class="prize">{escape(row.get("prize") or "—")}</td>'
@@ -103,13 +133,19 @@ def render_html(rows: list[dict], generated_at: str) -> str:
 </head>
 <body>
 <h1>◉ DEADLINE RADAR</h1>
-<p class="meta">generated {escape(generated_at)} — {len(rows)} watched</p>
+<p class="intro">Ranked countdown of the contests and grants on one watch list: soonest deadline first, overdue on top, unknown last. Deadline and prize are extracted from each page with heuristics, so a "?" means no deadline was recognised, not that there is none.</p>
+<p class="meta">generated {escape(generated_at)} — {len(rows)} watched — <span id="live-note"></span></p>
+<div class="wrap">
 <table>
-  <thead><tr><th>days</th><th>deadline</th><th>prize</th><th>title</th><th>url</th></tr></thead>
+  <caption class="meta" style="text-align:left">Days left until each deadline</caption>
+  <thead><tr><th scope="col">days</th><th scope="col">deadline</th><th scope="col">prize</th><th scope="col">title</th><th scope="col">url</th></tr></thead>
   <tbody>
 {table_body}
   </tbody>
 </table>
+</div>
+<p class="legend">Green: more than a week left. Amber: under a week. Red: overdue. A leading "!" on a title means the last fetch failed and older data is shown. Source: <a href="https://github.com/ntoledo319/deadline-radar">github.com/ntoledo319/deadline-radar</a></p>
+<script>{_SCRIPT}</script>
 </body>
 </html>
 """
